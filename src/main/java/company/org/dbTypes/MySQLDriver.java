@@ -6,6 +6,7 @@ import company.org.core.RandomGenerator;
 import company.org.pojos.Customer;
 import company.org.pojos.OnlineOrder;
 import company.org.pojos.Product;
+import org.knowm.yank.Yank;
 import org.springframework.util.StopWatch;
 
 import java.sql.*;
@@ -17,7 +18,18 @@ import java.util.List;
 import static company.org.core.Globals.*;
 import static java.lang.String.valueOf;
 
+
 public class MySQLDriver extends DatabaseDriver implements MySQLQueries {
+
+    private RandomGenerator randDataFromMySQL = new RandomGenerator();
+    private List<Customer> customersListMySQL = null;
+    private List<Product> productsListMySQL = null;
+    private List<OnlineOrder> onlineOrderListMySQL = null;
+
+    public RandomGenerator getRandDataFromMySQL() {
+        return randDataFromMySQL;
+    }
+
     public static Connection openConnection() {
         Connection mySQLConnection = null;
         try {
@@ -26,175 +38,147 @@ public class MySQLDriver extends DatabaseDriver implements MySQLQueries {
         } catch (Exception ex) {
             ExceptionHandler.handleException(ex);
         }
-        //System.out.printf("mySQLConnection is : ", mySQLConnection);
         return mySQLConnection;
     }
 
+    public void openYankMySQLConnection() {
+        try {
+            Yank.releaseDefaultConnectionPool();
+        } catch (Exception e) {
+            e.printStackTrace();
+            e.getMessage();
+        }
+        Yank.setupDefaultConnectionPool(dbProps);
+    }
 
-    public void createTables(String[][] tablesToCreate) throws SQLException {
-
+    public String createTables(String[][] tablesToCreate) throws SQLException {
+        String strQuery = null;
         for (int i = 0; i < tablesToCreate.length; i++) {
-
             StringBuilder params = new StringBuilder("");
             for (int j = 1; j < tablesToCreate[i].length; j++) {
                 if (j != tablesToCreate[i].length - 1) {
-                    params.append("$col").append(valueOf(j)).append(", ");
+                    params.append("${col}").append(valueOf(j)).append(", ");
                 } else {
-                    params.append("$col").append(valueOf(j));
+                    params.append("${col}").append(valueOf(j));
                 }
             }
-
-            String strQuery =
-                    "CREATE TABLE $tableName "
-                            + "(" + params + "); ";
+            strQuery =
+                    CREATE_TABLE_MYSQL
+                            + " (" + params + ")";
             for (int j = 1; j < tablesToCreate[i].length; j++) {
                 strQuery = strQuery
-                        .replace("$col" + j, tablesToCreate[i][j]);
+                        .replace("${col}" + j, tablesToCreate[i][j]);
             }
             strQuery = strQuery
-                    .replace("$tableName", tablesToCreate[i][0]);
-
+                    .replace("${tableName}", tablesToCreate[i][0]);
             try (PreparedStatement preparedStatement = mySQLConnection.
                     prepareStatement(strQuery);) {
-
                 preparedStatement.executeUpdate();
             }
+
         }
+        return strQuery;
     }
 
-    public void deleteTables(String[][] tablesToDelete) throws SQLException {
+    public void deleteTables(String[] tablesToDelete) throws SQLException {
         for (int i = 0; i < tablesToDelete.length; i++) {
-            // Vulnerable to sql injection but still
-            String strQuery = "DROP TABLE IF EXISTS "
-                    + "$tableName;";
-            String query = strQuery.replace("$tableName", tablesToDelete[i][0]);
-
             try (PreparedStatement preparedStatement = mySQLConnection.
-                    prepareStatement(query);) {
+                    prepareStatement(String.format(DROP_TABLE_MYSQL, tablesToDelete[i]));) {
                 preparedStatement.executeUpdate();
             }
         }
     }
-
 
     public void truncateTable(String[] tablesToDelete) throws SQLException {
-
         for (int i = 0; i < tablesToDelete.length; i++) {
-
-            String strQuery =
-                    "TRUNCATE $tableName ";
-
-            String query = strQuery
-                    .replace("$tableName", tablesToDelete[i]);
-
             try (PreparedStatement preparedStatement = mySQLConnection.
-                    prepareStatement(query)) {
+                    prepareStatement(TRUNCATE_TABLE_MYSQL.replace("${tableName}", tablesToDelete[i]))) {
                 preparedStatement.executeUpdate();
             }
         }
     }
 
-
-
-    public void insertCustomersData(String[] tablesToWorkWith, RandomGenerator randData) throws SQLException {
-
+    public void insertCustomersData(RandomGenerator randData) throws SQLException {
         List<Customer> listCust = new ArrayList<>();
         listCust = randData.getCustomersList();
-
         for (int i = 0; i < listCust.size(); i++) {
             listCust.get(i);
-
-            String strQuery =
-                    "INSERT INTO $tableName "
-                            + "(customer_number, first_name, last_name, address_line1, address_line2,"
-                            + " year, phone, city, postcode) "
-                            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
-            String query = strQuery
-                    .replace("$tableName", tablesToWorkWith[0]);
-
             try (PreparedStatement preparedStatement = mySQLConnection.
-                    prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+                    prepareStatement(INSERT_INTO_CUSTOMERS_MYSQL, Statement.RETURN_GENERATED_KEYS)) {
 
                 preparedStatement.setInt(1, listCust.get(i).getCustomer_number());
                 preparedStatement.setString(2, listCust.get(i).getFirst_name());
                 preparedStatement.setString(3, listCust.get(i).getLast_name());
                 preparedStatement.setString(4, listCust.get(i).getAddress_line1());
-                preparedStatement.setString(5, listCust.get(i).getAddress_line2());
-                preparedStatement.setInt(6, listCust.get(i).getYear());
-                preparedStatement.setString(7, listCust.get(i).getPhone());
-                preparedStatement.setString(8, listCust.get(i).getCity());
-                preparedStatement.setString(9, listCust.get(i).getPostcode());
+                preparedStatement.setString(5, listCust.get(i).getCity());
+                preparedStatement.setString(6, listCust.get(i).getPostcode());
+                preparedStatement.setTimestamp(7, new Timestamp(System.currentTimeMillis()));
+                preparedStatement.setTimestamp(8, new Timestamp(System.currentTimeMillis()));
+//                System.out.println("prepstat: " + preparedStatement);
                 preparedStatement.executeUpdate();
             }
         }
     }
 
-    public void insertProductsData(String[] tablesToWorkWith, RandomGenerator randData) throws SQLException {
+    public void insertCustomersDataYank(RandomGenerator randData) {
+        this.openYankMySQLConnection();
+        List<Customer> custList = randData.getCustomersList();
+        Object[][] params = new Object[custList.size()][];
 
-        List<Product> listProd = new ArrayList<>();
-        listProd = randData.getProductsList();
-
-        for (int i = 0; i < listProd.size(); i++) {
-            listProd.get(i);
-
-            String strQuery =
-                    "INSERT INTO $tableName "
-                            + "(product_name, product_description, product_code, quantity, price) "
-                            + "VALUES (?, ?, ?, ?, ?)";
-
-            String query = strQuery
-                    .replace("$tableName", tablesToWorkWith[1]);
-
-            try (PreparedStatement preparedStatement = mySQLConnection.
-                    prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
-
-                preparedStatement.setString(1, listProd.get(i).getProduct_name());
-                preparedStatement.setString(2, listProd.get(i).getProduct_description());
-                preparedStatement.setString(3, listProd.get(i).getProduct_code());
-                preparedStatement.setInt(4, listProd.get(i).getQuantity());
-                preparedStatement.setDouble(5, listProd.get(i).getPrice());
-                preparedStatement.executeUpdate();
-            }
+        for (int i = 0; i < custList.size(); i++) {
+            Customer customer = custList.get(i);
+            customer.setMigrated_ts(new Timestamp(System.currentTimeMillis()));
+            customer.setLast_updated_ts(new Timestamp(System.currentTimeMillis()));
+            params[i] = new Object[]{
+                    customer.getCustomer_number(), customer.getFirst_name(), customer.getLast_name(),
+                    customer.getAddress_line1(), customer.getCity(), customer.getPostcode(),
+                    customer.getMigrated_ts(), customer.getLast_updated_ts()
+            };
         }
+        Yank.executeBatch(INSERT_INTO_CUSTOMERS_MYSQL, params);
     }
 
+    public void insertProductsDataYank(RandomGenerator randData) {
+        this.openYankMySQLConnection();
+        List<Product> productsList = randData.getProductsList();
+        Object[][] params = new Object[productsList.size()][];
 
-    public void insertOnlineOrdersData(String[] tablesToDelete, RandomGenerator randData) throws SQLException {
+        for (int i = 0; i < productsList.size(); i++) {
+            Product product = productsList.get(i);
+            product.setMigrated_ts(new Timestamp(System.currentTimeMillis()));
+            product.setLast_updated_ts(new Timestamp(System.currentTimeMillis()));
+            params[i] = new Object[]{
+                    product.getProduct_name(), product.getProduct_description(), product.getProduct_code(),
+                    product.getQuantity(), product.getPrice(),
+                    product.getMigrated_ts(), product.getLast_updated_ts()};
+        }
+        Yank.executeBatch(INSERT_INTO_PRODUCTS_MYSQL, params);
+    }
+
+    public void insertOnlineOrdersData(RandomGenerator randData) throws SQLException {
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
-
         Instant starts = Instant.now();
 
         List<OnlineOrder> listOnlineOrders = new ArrayList<>();
         listOnlineOrders = randData.getOnlineOrderList();
 
         for (int i = 0; i < listOnlineOrders.size(); i++) {
-
             listOnlineOrders.get(i);
-
-            int numbersOfSubjectsStudied = listOnlineOrders.get(i).getListOfProducts().size();
-
-
+            int numbersOfProductsInOrder = listOnlineOrders.get(i).getListOfProducts().size();
             for (int j = 0; j < listOnlineOrders.get(i).getListOfProducts().size(); j++) {
-                String strQuery =
-                        "INSERT INTO $tableName "
-                                + "(order_number, customer_number, total_price, date, product_code) "
-                                + "VALUES (?, ?, ?, ?, ?)";
-
-                String query = strQuery
-                        .replace("$tableName", tablesToDelete[2]);
-
                 try (PreparedStatement preparedStatement = mySQLConnection.
-                        prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+                        prepareStatement(INSERT_INTO_ONLINEORDERS_MYSQL, Statement.RETURN_GENERATED_KEYS)) {
 
                     preparedStatement.setInt(1, listOnlineOrders.get(i).getOrder_number());
                     preparedStatement.setInt(2, listOnlineOrders.get(i).getCustomer_number());
-                    preparedStatement.setDouble(3, listOnlineOrders.get(i).getTotal_price());
-                    preparedStatement.setString(4, String.valueOf(listOnlineOrders.get(i).getDate()));
-                    preparedStatement.setString(5, listOnlineOrders.get(i)
+                    preparedStatement.setString(3, listOnlineOrders.get(i)
                             .getListOfProducts().get(j)
                             .getProduct_code());
+                    preparedStatement.setInt(4, 1);
+                    preparedStatement.setDouble(5, listOnlineOrders.get(i).getTotal_price());
+                    preparedStatement.setTimestamp(6, new Timestamp(System.currentTimeMillis()));
+                    preparedStatement.setTimestamp(7, new Timestamp(System.currentTimeMillis()));
                     preparedStatement.executeUpdate();
                 }
             }
@@ -205,99 +189,85 @@ public class MySQLDriver extends DatabaseDriver implements MySQLQueries {
         System.out.println(Duration.between(starts, ends));
     }
 
-
-    public void updateObject(String table, String objectId, String sqlSet) {
-        String columnId = null;
-        String adapter = "";
-
-        switch(table) {
-            case "customers":
-                columnId = "customer_number";
-                break;
-            case "products":
-                columnId = "product_code";
-                objectId = "\"" + objectId + "\"";
-                adapter = "\"";
-                break;
-            case "online_orders":
-                columnId = "order_number";
-                break;
+    public void selectAllCustomers() {
+        this.openYankMySQLConnection();
+        List<Customer> allCustomers = Yank.queryBeanList(SELECT_ALL_FROM_MYSQL.replace("${tableName}", "customers"), Customer.class, null);
+        for (Customer customer : allCustomers) {
+            System.out.println(customer.getCustomer_number());
         }
-
-
-        String strQuery =
-                "UPDATE $table_name "
-                        + sqlSet
-                        + " WHERE " + columnId + " = " + objectId + ";";
-
-        String query = strQuery
-                .replace("$table_name", table);
-
-        try (PreparedStatement preparedStatement = mySQLConnection.
-                prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
-            preparedStatement.executeUpdate();
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
+        customersListMySQL = allCustomers;
+        randDataFromMySQL.setCustomersList(customersListMySQL);
     }
 
+    public void selectAllProducts() {
+        this.openYankMySQLConnection();
+        List<Product> allProducts = Yank.queryBeanList(SELECT_ALL_FROM_MYSQL.replace("${tableName}", "products"), Product.class, null);
+        for (Product product : allProducts) {
+            System.out.println(product.getProduct_code());
+        }
+        productsListMySQL = allProducts;
+        randDataFromMySQL.setProductsList(productsListMySQL);
+    }
 
-    public void mathAvgGrade(int studentsClassYear) throws SQLException {
-        //studentsClassYear = 2018;
-        double avgGrade = 0;
-        String query =
-                "SELECT AVG(grade) FROM college_book.gradebooks WHERE subjectId LIKE \"55598\" AND studentId IN (SELECT studentId FROM college_book.students WHERE classYear = ?);\n";
+    /**
+     * @throws SQLException
+     * First we are checking how many different orders we have
+     * After that we are selecting the rows for each order - all is the same except for the product number
+     * Keep in mind that we have the predefined list of Products from randData
+     * No our resultSet contains the select for only one order, where the products are different
+     * For each row in our resultSet we take the product code and find in the the earlier mentioned predefined randData - using streams and filter
+     * Once found the item is added to a list
+     * we go to the last row of the resultSet and we set the data from the DB to values of properties of our object
+     * we also set the list that we made earlier with all the different products
+     */
+    public void selectAllOnlineOrders() throws SQLException {
+        List<String> uniqueOrderNumbersList = new ArrayList<>();
+        List<OnlineOrder> OnlineOrderRetrievedList = new ArrayList<>();
+        List<Product> productListPerOrder = new ArrayList<>();
+
+
         try (PreparedStatement preparedStatement = mySQLConnection.
-                prepareStatement(query);) {
-            preparedStatement.setInt(1, studentsClassYear);
+                prepareStatement(SELECT_DISTINCT_ORDERS_MYSQL, Statement.RETURN_GENERATED_KEYS);
+             ResultSet resultSet = preparedStatement.executeQuery();) {
+            while (resultSet.next()) {
+                uniqueOrderNumbersList.add(String.valueOf(resultSet.getInt("order_number")));
+            }
+        }
 
-            try (ResultSet resultSet = preparedStatement.executeQuery();) {
+        for (String s : uniqueOrderNumbersList) {
+            productListPerOrder = new ArrayList<>();
+
+            try (PreparedStatement preparedStatement = mySQLConnection.
+                    prepareStatement(String.format(SELECT_ALL_DATA_RELATED_TO_A_SPECIFIC_MYSQL, s),
+                            ResultSet.TYPE_SCROLL_SENSITIVE,
+                            ResultSet.CONCUR_UPDATABLE,
+//                            ResultSet.CONCUR_READ_ONLY
+                            Statement.RETURN_GENERATED_KEYS);
+                 ResultSet resultSet = preparedStatement.executeQuery();) {
+
                 while (resultSet.next()) {
-                    System.out.println("resulseti is: " + resultSet);
-                    System.out.println("resulseti is: " + preparedStatement);
-                    avgGrade = resultSet.getDouble("AVG(grade)");
+                    String productCode = resultSet.getString("product_code");
+                    Product currentProduct = randDataDefaultStatic.getProductsList().stream().filter(product -> productCode.equals(product.getProduct_code())).findFirst().orElse(null);
+                    productListPerOrder.add(currentProduct);
+                }
+
+                resultSet.last();
+                if (resultSet.isLast()) {
+                    OnlineOrder fak = new OnlineOrder();
+                    fak.setOrder_number(resultSet.getInt("order_number"));
+                    fak.setTotal_price(resultSet.getDouble("total_price"));
+                    fak.setCustomer_number(resultSet.getInt("customer_number"));
+                    fak.setQuantity(resultSet.getInt("quantity"));
+                    fak.setMigrated_ts(resultSet.getTimestamp("migrated_ts"));
+                    fak.setLast_updated_ts(resultSet.getTimestamp("last_updated_ts"));
+                    fak.setListOfProducts(productListPerOrder);
+                    fak.setMigrated_ts(new Timestamp(System.currentTimeMillis()));
+                    fak.setLast_updated_ts(new Timestamp(System.currentTimeMillis()));
+                    OnlineOrderRetrievedList.add(fak);
                 }
             }
         }
-        System.out.println("The AVG math grade for all students is: " + avgGrade);
+        onlineOrderListMySQL = OnlineOrderRetrievedList;
+        randDataFromMySQL.setOnlineOrderList(onlineOrderListMySQL);
     }
-
-    public void deleteObject(String tableToDeleteFrom, String objectId ) throws SQLException {
-        String columnId = null;
-        String adapter = "";
-
-        switch(tableToDeleteFrom) {
-            case "customers":
-                columnId = "customer_number";
-                break;
-            case "products":
-                columnId = "product_code";
-                objectId = "\"" + objectId + "\"";
-                adapter = "\"";
-                break;
-            case "online_orders":
-                columnId = "order_number";
-                break;
-        }
-
-
-        StringBuilder query = new StringBuilder();
-
-        query
-                .append("DELETE FROM " + tableToDeleteFrom + " " +
-                        System.getProperty("line.separator") +
-                        "WHERE " + columnId + " = " + objectId + ";");
-
-        try (PreparedStatement preparedStatement = mySQLConnection.
-                prepareStatement(String.valueOf(query));) {
-            preparedStatement.executeUpdate();
-        }
-    }
-
-
-    public static void closeConnection() throws SQLException {
-        mySQLConnection.close();
-    }
-
-
 }

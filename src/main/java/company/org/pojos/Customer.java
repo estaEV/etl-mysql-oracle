@@ -1,15 +1,17 @@
 package company.org.pojos;
 
+import java.sql.Timestamp;
+
 public class Customer {
     private int customer_number;
     private int year;
     private String first_name;
     private String last_name;
     private String address_line1;
-    private String address_line2;
-    private String phone;
     private String city;
     private String postcode;
+    private Timestamp migrated_ts;
+    private Timestamp last_updated_ts;
 
     public int getCustomer_number() {
         return customer_number;
@@ -51,22 +53,6 @@ public class Customer {
         this.address_line1 = address_line1;
     }
 
-    public String getAddress_line2() {
-        return address_line2;
-    }
-
-    public void setAddress_line2(String address_line2) {
-        this.address_line2 = address_line2;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
     public String getCity() {
         return city;
     }
@@ -81,5 +67,34 @@ public class Customer {
 
     public void setPostcode(String postcode) {
         this.postcode = postcode;
+    }
+
+    public Timestamp getMigrated_ts() {
+        return migrated_ts;
+    }
+
+    public void setMigrated_ts(Timestamp migrated_ts) {
+        this.migrated_ts = migrated_ts;
+    }
+
+    public Timestamp getLast_updated_ts() {
+        return last_updated_ts;
+    }
+
+    public void setLast_updated_ts(Timestamp last_updated_ts) {
+        this.last_updated_ts = last_updated_ts;
+    }
+
+    @Override
+    public String toString() {
+        return "Customer{" +
+                "customer_number=" + customer_number +
+                ", year=" + year +
+                ", first_name='" + first_name + '\'' +
+                ", last_name='" + last_name + '\'' +
+                ", address_line1='" + address_line1 + '\'' +
+                ", city='" + city + '\'' +
+                ", postcode='" + postcode + '\'' +
+                '}';
     }
 }

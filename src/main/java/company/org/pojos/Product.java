@@ -1,11 +1,15 @@
 package company.org.pojos;
 
+import java.sql.Timestamp;
+
 public class Product {
     private String product_name;
     private String product_description;
     private String product_code;
     private int quantity;
     private double price;
+    private Timestamp migrated_ts;
+    private Timestamp last_updated_ts;
 
     public Product() {
 
@@ -49,5 +53,32 @@ public class Product {
 
     public void setPrice(double price) {
         this.price = price;
+    }
+
+    public Timestamp getMigrated_ts() {
+        return migrated_ts;
+    }
+
+    public void setMigrated_ts(Timestamp migrated_ts) {
+        this.migrated_ts = migrated_ts;
+    }
+
+    public Timestamp getLast_updated_ts() {
+        return last_updated_ts;
+    }
+
+    public void setLast_updated_ts(Timestamp last_updated_ts) {
+        this.last_updated_ts = last_updated_ts;
+    }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "product_name='" + product_name + '\'' +
+                ", product_description='" + product_description + '\'' +
+                ", product_code='" + product_code + '\'' +
+                ", quantity=" + quantity +
+                ", price=" + price +
+                '}';
     }
 }

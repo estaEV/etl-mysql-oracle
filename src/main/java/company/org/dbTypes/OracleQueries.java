@@ -1,99 +1,52 @@
 package company.org.dbTypes;
 
+import org.knowm.yank.PropertiesUtils;
+
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.Properties;
 
 import static java.lang.String.valueOf;
 
 //Contains Strings with queries for the appropriate DB. Table name will be a parameter
 public interface OracleQueries {
+    Properties dbProps = PropertiesUtils.getPropertiesFromPath("src/main/java/company/org/configs/ORACLE_DB.properties");
 
-    String CREATE_TABLE_CUSTOMERS_MYSQL = "CREATE TABLE IF NOT EXISTS CUSTOMERS (\n" +
-            "CUSTOMER_NUMBER NUMBER(38,0),\n" +
-            "FIRST_NAME VARCHAR2(50),\n" +
-            "LAST_NAME VARCHAR2(50),\n" +
-            "ADDRESS_LINE1 VARCHAR2(50),\n" +
-            "PHONE VARCHAR2(50),\n" +
-            "CITY VARCHAR2(50),\n" +
-            "POSTCODE VARCHAR2(50),\n" +
-            "MIGRATED_TS TIMESTAMP,\n" +
-            "LAST_UPDATED_TS TIMESTAMP);\n";
-
-String CREATE_TABLE_PRODUCTS_MYSQL = "CREATE TABLE IF NOT EXISTS PRODUCTS (\n" +
-        "PRODUCT_NAME VARCHAR2(50),\n" +
-        "PRODUCT_DESCRIPTION VARCHAR2(50)\n" +
-        "PRODUCT_CODE VARCHAR2(50),\n" +
-        "QUANTITY NUMBER(38,0),\n" +
-        "PRICE DOUBLE PRECISION\n" +
-        "MIGRATED_TS TIMESTAMP,\n" +
-        "LAST_UPDATED_TS TIMESTAMP,";
-
-String CREATE_TABLE_ONLINE_ORDERS_MYSQL = "CREATE TABLE IN NOT EXISTS ONLINE_ORDERS (\n" +
-        "ORDER_NUMBER NUMBER(38,0),\n" +
-        "CUSTOMER_NUMBER NUMBER(38,0),\n" +
-        "PRODUCT_CODE VARCHAR2(50),\n" +
-        "QUANTITY VARCHAR2(50),\n" +
-        "TOTAL_PRICE DOUBLE PRECISION,\n" +
-        "ORDER_CREATION_DATE VARCHAR2(50),\n" +
-        "MIGRATED_TS TIMESTAMP,\n" +
-        "LAST_UPDATED_TS TIMESTAMP);";
-
-    String INSERT_INTO_CUSTOMERS_MYSQL = "INSERT INTO \"C##ORACLESLAVEUSER\".CUSTOMERS (CUSTOMER_NUMBER, FIRST_NAME, LAST_NAME, " +
-            "ADDRESS_LINE1, PHONE, CITY, POSTCODE, MIGRATED_TS, LAST_UPDATED_TS) \n" +
-            "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
-    String INSERT_INTO_PRODUCTS = "";
-
-
-
-
-
-    String[][] tablesToWorkWith3 = {
-            {"customers", "customer_number INT", "first_name VARCHAR(50)", "last_name VARCHAR(50)",
-                    "address_line1 VARCHAR(100)", "address_line2 VARCHAR(100)", "year INT", "phone VARCHAR(50)", "city VARCHAR(50)", "postcode VARCHAR(50)"},
-            {"products", "product_name VARCHAR(50)", "product_description VARCHAR(100)", "product_code VARCHAR(50)", "quantity INT", "price DOUBLE"},
-            {"online_orders", "order_number INT", "customer_number INT", "product_code VARCHAR(50)", "quantity INT", "total_price DOUBLE", "date VARCHAR(50)"}
+    public static final String[][] tablesToWorkWith3Oracle = {
+            {"customers", "customer_number INT", "first_name VARCHAR2(50)", "last_name VARCHAR2(50)",
+                    "address_line1 VARCHAR2(100)", "city VARCHAR2(50)", "postcode VARCHAR2(50)",
+                    "migrated_ts TIMESTAMP", "last_updated_ts TIMESTAMP"},
+            {"products", "product_name VARCHAR2(50)", "product_description VARCHAR2(100)", "product_code VARCHAR2(50)",
+                    "quantity INT", "price DOUBLE PRECISION", "migrated_ts TIMESTAMP", "last_updated_ts TIMESTAMP"},
+            {"online_orders", "order_number INT", "customer_number INT", "product_code VARCHAR2(50)", "quantity INT",
+                    "total_price DOUBLE PRECISION", "migrated_ts TIMESTAMP", "last_updated_ts TIMESTAMP"}
     };
 
-//    String CREATE_TABLES_MYSQL = OracleQueries.createTables(tablesToWorkWith3);
+
+    String CREATE_TABLE_ORACLE = "CREATE TABLE ${tableName}";
+    String TRUNCATE_TABLE_ORACLE = "TRUNCATE TABLE ${tableName} DROP ALL STORAGE\n";
+    String DROP_TABLE_ORACLE = "DROP TABLE ${tableName} PURGE\n";
+
+    String SELECT_ALL_FROM_ORACLE = "SELECT * FROM ${tableName}";
+
+    String INSERT_INTO_CUSTOMERS_ORACLE = "INSERT INTO \"C##ORACLESLAVEUSER\".CUSTOMERS (CUSTOMER_NUMBER, FIRST_NAME, LAST_NAME, " +
+            "ADDRESS_LINE1, CITY, POSTCODE, MIGRATED_TS, LAST_UPDATED_TS) \n" +
+            "VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
+    String INSERT_INTO_PRODUCTS_ORACLE = "INSERT INTO \"C##ORACLESLAVEUSER\".products (product_name, product_description, product_code, " +
+            "quantity, price, migrated_ts, last_updated_ts) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    String INSERT_INTO_ONLINEORDERS_ORACLE = "INSERT INTO \"C##ORACLESLAVEUSER\".online_orders (order_number, customer_number, product_code," +
+            " quantity, total_price, migrated_ts, last_updated_ts) VALUES (?, ?, ?, ?, ?, ?, ?)";
+
+    String SELECT_DISTINCT_ORDERS_ORACLE = "select distinct(order_number) from online_orders";
+    String SELECT_ALL_DATA_RELATED_TO_A_SPECIFIC_ORDER = "select * from online_orders where order_number = %1$s";
+
+
+//    String DELETE_TABLE_CUSTOMERS_MYSQL = "DROP TABLE IF EXISTS CUSTOMERS;\n";
+//    String DELETE_TABLE_PRODUCTS_MYSQL = "DROP TABLE IF EXISTS PRODUCTS;\n";
+//    String DELETE_TABLE_ONLINE_ORDERS_MYSQL = "DROP TABLE IF EXISTS ONLINE_ORDERS;\n";
 //
-//    static String createTables(String[][] tablesToCreate) {
-//        String strQuery = null;
-//
-//        for (int i = 0; i < tablesToCreate.length; i++) {
-//            StringBuilder params = new StringBuilder("");
-//            for (int j = 1; j < tablesToCreate[i].length; j++) {
-//                if (j != tablesToCreate[i].length - 1) {
-//                    params.append("$col").append(valueOf(j)).append(", ");
-//                } else {
-//                    params.append("$col").append(valueOf(j)).append(";").append("\n");
-//                }
-//            }
-//            strQuery =
-//                    "CREATE TABLE $tableName "
-//                            + "(" + params + "); ";
-//            for (int j = 1; j < tablesToCreate[i].length; j++) {
-//                strQuery = strQuery
-//                        .replace("$col" + j, tablesToCreate[i][j]);
-//            }
-//            strQuery = strQuery
-//                    .replace("$tableName", tablesToCreate[i][0]);
-//        }
-//        return strQuery;
-//    }
-//
-//
-//    public void deleteTables(String[][] tablesToDelete) throws SQLException {
-//        for (int i = 0; i < tablesToDelete.length; i++) {
-//            // Vulnerable to sql injection but still
-//            String strQuery = "DROP TABLE IF EXISTS "
-//                    + "$tableName;";
-//            String query = strQuery.replace("$tableName", tablesToDelete[i][0]);
-//
-//            try (PreparedStatement preparedStatement = connection.
-//                    prepareStatement(query);) {
-//                preparedStatement.executeUpdate();
-//            }
-//        }
-//    }
+//    String TRUNCATE_TABLE_CUSTOMERS_MYSQL = "TRUNCATE TABLE C##ORACLESLAVEUSER.CUSTOMERS;\n";
+//    String TRUNCATE_TABLE_PRODUCTS_MYSQL = "TRUNCATE TABLE \"C##ORACLESLAVEUSER\".PRODUCTS;\n";
+//    String TRUNCATE_TABLE_ONLINE_ORDERS_MYSQL = "TRUNCATE TABLE \"C##ORACLESLAVEUSER\".ONLINE_ORDERS;\n";
+
 }

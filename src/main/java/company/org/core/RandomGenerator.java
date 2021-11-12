@@ -18,7 +18,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
-import static company.org.core.Globals.STUDENTNAMES;
+import static company.org.core.Globals.*;
 
 public class RandomGenerator {
     private List<Customer> customersList = null;
@@ -55,11 +55,10 @@ public class RandomGenerator {
 
     public void generateMeSome() throws ParseException {
         Faker faker = new Faker();
-        int length = STUDENTNAMES.length;
 
         Supplier<Integer> numOfSubjects = () -> ThreadLocalRandom.current().nextInt(6, 9);
         Supplier<Integer> dice = () -> ThreadLocalRandom.current().nextInt(1, 60);
-        Supplier<Integer> numberOfThings = () -> ThreadLocalRandom.current().nextInt(120, 200);
+        Supplier<Integer> numberOfThings = () -> ThreadLocalRandom.current().nextInt(10, 20);
         Supplier<Integer> year = () -> ThreadLocalRandom.current().nextInt(2018, 2022);
         Supplier<Integer> grade = () -> ThreadLocalRandom.current().nextInt(2, 6);
 
@@ -72,10 +71,8 @@ public class RandomGenerator {
             custStartId = ++custStartId;
             customersList.get(i).setCustomer_number(custStartId);
             customersList.get(i).setAddress_line1(faker.address().fullAddress());
-            customersList.get(i).setAddress_line2(faker.address().secondaryAddress());
             customersList.get(i).setCity(faker.address().city());
             customersList.get(i).setPostcode(faker.address().zipCode());
-            customersList.get(i).setPhone(String.valueOf(faker.phoneNumber()));
             //System.out.println(stdList.get(i));
         }
 
@@ -93,7 +90,8 @@ public class RandomGenerator {
         }
 
         onlineOrderList = new ArrayList<>();
-        for (int i = 0; i < faker.number().numberBetween(1200, 1200); i++) {
+//        for (int i = 0; i < faker.number().numberBetween(1200, 1200); i++) {
+        for (int i = 0; i < numberOfThings.get(); i++) {
             OnlineOrder fak = new OnlineOrder();
             onlineOrderList.add(fak);
             onlineOrderStartId = ++onlineOrderStartId;
@@ -101,10 +99,10 @@ public class RandomGenerator {
             onlineOrderList.get(i).setCustomer_number(faker.number().numberBetween(custStartId, custStartId+customersList.size()));
             Date tempDate = (faker.date().past(2022, TimeUnit.DAYS));
             LocalDate tempDate2 = tempDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-            onlineOrderList.get(i).setDate(tempDate2);
             List<Product> listOfProducts = new ArrayList<>();
             double totalPrice = 0;
-            for (int j = 0; j < faker.number().numberBetween(2, 8); j++) {
+//            for (int j = 0; j < faker.number().numberBetween(2, 8); j++) {
+            for (int j = 0; j < 5; j++) {
                 listOfProducts.add(this.productsList.get(faker.number().numberBetween(1, this.productsList.size())));
                 totalPrice = listOfProducts.get(j).getPrice();
             }
