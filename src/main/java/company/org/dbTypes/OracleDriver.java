@@ -260,7 +260,7 @@ public class OracleDriver extends DatabaseDriver implements OracleQueries {
 
                 while (resultSet.next()) {
                     String productCode = resultSet.getString("product_code");
-                    Product currentProduct = randDataDefaultStatic.getProductsList().stream().filter(product -> productCode.equals(product.getProduct_code())).findFirst().orElse(null);
+                    Product currentProduct = randDataFromOracle.getProductsList().stream().filter(product -> productCode.equals(product.getProduct_code())).findFirst().orElse(null);
                     productListPerOrder.add(currentProduct);
                 }
 

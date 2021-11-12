@@ -161,6 +161,7 @@ public class MySQLDriver extends DatabaseDriver implements MySQLQueries {
         Instant starts = Instant.now();
 
         List<OnlineOrder> listOnlineOrders = new ArrayList<>();
+
         listOnlineOrders = randData.getOnlineOrderList();
 
         for (int i = 0; i < listOnlineOrders.size(); i++) {
@@ -247,7 +248,7 @@ public class MySQLDriver extends DatabaseDriver implements MySQLQueries {
 
                 while (resultSet.next()) {
                     String productCode = resultSet.getString("product_code");
-                    Product currentProduct = randDataDefaultStatic.getProductsList().stream().filter(product -> productCode.equals(product.getProduct_code())).findFirst().orElse(null);
+                    Product currentProduct = randDataFromMySQL.getProductsList().stream().filter(product -> productCode.equals(product.getProduct_code())).findFirst().orElse(null);
                     productListPerOrder.add(currentProduct);
                 }
 

@@ -2,6 +2,7 @@ package company.org.core;
 
 import company.org.dbTypes.MySQLDriver;
 import company.org.dbTypes.OracleDriver;
+import company.org.pojos.Product;
 
 import java.sql.SQLException;
 import java.text.ParseException;
@@ -15,6 +16,7 @@ import static company.org.dbTypes.MySQLQueries.tablesToWorkWithMySQL;
 import static company.org.dbTypes.OracleQueries.*;
 
     public class Main {
+
 
         public static void main(String[] args) throws SQLException, ParseException {
             Scanner sc = new Scanner(System.in);
@@ -40,8 +42,8 @@ import static company.org.dbTypes.OracleQueries.*;
             MySQLDriver mySQLComp = new MySQLDriver();
             OracleDriver oracleComp = new OracleDriver();
 
-
-//            randDataDefaultStatic.generateMeSome();
+            RandomGenerator randDataDefault = new RandomGenerator();
+            randDataDefault.generateMeSome();
 
             while (isRunning) {
                 menu.forEach(option -> System.out.println(option));
@@ -63,18 +65,18 @@ import static company.org.dbTypes.OracleQueries.*;
                         System.out.println("createsql2: " + asd2);
                         break;
                     case 3:
-                        randDataDefaultStatic.generateMeSome();
-
-                        mySQLComp.insertCustomersDataYank(randDataDefaultStatic);
-                        mySQLComp.insertProductsDataYank(randDataDefaultStatic);
-                        mySQLComp.insertOnlineOrdersData(randDataDefaultStatic);
+                        randDataDefault = new RandomGenerator();
+                        randDataDefault.generateMeSome();
+                        mySQLComp.insertCustomersDataYank(randDataDefault);
+                        mySQLComp.insertProductsDataYank(randDataDefault);
+                        mySQLComp.insertOnlineOrdersData(randDataDefault);
                         break;
                     case 4:
-                        randDataDefaultStatic.generateMeSome();
-
-                        oracleComp.insertCustomersDataYank(randDataDefaultStatic);
-                        oracleComp.insertProductsDataYank(randDataDefaultStatic);
-                        oracleComp.insertOnlineOrdersData(randDataDefaultStatic);
+                        randDataDefault = new RandomGenerator();
+                        randDataDefault.generateMeSome();
+                        oracleComp.insertCustomersDataYank(randDataDefault);
+                        oracleComp.insertProductsDataYank(randDataDefault);
+                        oracleComp.insertOnlineOrdersData(randDataDefault);
                         break;
                     case 5:
                         mySQLComp.truncateTable(tablesToWorkWith);
@@ -99,7 +101,7 @@ import static company.org.dbTypes.OracleQueries.*;
                         oracleComp.selectAllOnlineOrders();
                         break;
                     case 11:
-                        oracleComp.truncateTable(tablesToWorkWith);
+                        //oracleComp.truncateTable(tablesToWorkWith);
                         mySQLComp.selectAllCustomers();
                         mySQLComp.selectAllProducts();
                         mySQLComp.selectAllOnlineOrders();
@@ -108,7 +110,7 @@ import static company.org.dbTypes.OracleQueries.*;
                         oracleComp.insertOnlineOrdersData(mySQLComp.getRandDataFromMySQL());
                         break;
                     case 12:
-                        mySQLComp.truncateTable(tablesToWorkWith);
+                        //mySQLComp.truncateTable(tablesToWorkWith);
                         oracleComp.selectAllCustomers();
                         oracleComp.selectAllProducts();
                         oracleComp.selectAllOnlineOrders();
@@ -119,5 +121,16 @@ import static company.org.dbTypes.OracleQueries.*;
                 }
             }
         }
+
+//        public Product getProductListOfTheExistingRandObject() {
+//            randDataDefaultStatic.getProductsList();
+//        }
+//
+/*        public RandomGenerator getMeRandData() throws ParseException {
+            RandomGenerator randDataCustom = new RandomGenerator();
+            randDataCustom.generateMeSome();
+            return randDataCustom;
+        }*/
+
     }
 
