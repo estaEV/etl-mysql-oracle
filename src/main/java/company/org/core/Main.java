@@ -40,7 +40,8 @@ import static company.org.dbTypes.OracleQueries.*;
             MySQLDriver mySQLComp = new MySQLDriver();
             OracleDriver oracleComp = new OracleDriver();
 
-            randDataDefaultStatic.generateMeSome();
+
+//            randDataDefaultStatic.generateMeSome();
 
             while (isRunning) {
                 menu.forEach(option -> System.out.println(option));
@@ -62,12 +63,15 @@ import static company.org.dbTypes.OracleQueries.*;
                         System.out.println("createsql2: " + asd2);
                         break;
                     case 3:
+                        randDataDefaultStatic.generateMeSome();
+
                         mySQLComp.insertCustomersDataYank(randDataDefaultStatic);
                         mySQLComp.insertProductsDataYank(randDataDefaultStatic);
                         mySQLComp.insertOnlineOrdersData(randDataDefaultStatic);
                         break;
-
                     case 4:
+                        randDataDefaultStatic.generateMeSome();
+
                         oracleComp.insertCustomersDataYank(randDataDefaultStatic);
                         oracleComp.insertProductsDataYank(randDataDefaultStatic);
                         oracleComp.insertOnlineOrdersData(randDataDefaultStatic);
