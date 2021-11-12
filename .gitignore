@@ -2,8 +2,8 @@
 /shelf/
 /.idea/workspace.xml
 *.iml
+*idea/
 .idea/
-/.idea/
 out/
 target/
 src/test/screenshots/
