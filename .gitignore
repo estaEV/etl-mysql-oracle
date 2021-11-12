@@ -1,7 +1,9 @@
 # Default ignored files
 /shelf/
+/.idea/workspace.xml
 *.iml
 .idea/
+/.idea/
 out/
 target/
 src/test/screenshots/
