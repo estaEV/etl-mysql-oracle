@@ -19,7 +19,7 @@ import org.assertj.core.api.SoftAssertions;
 import static company.org.Globals.*;
 import static org.junit.Assert.assertEquals;
 
-public class ETLStepDeginitions {
+public class ETLStepDefinitions {
     private SoftAssertions softAssertions = new SoftAssertions();
     DatabaseDriver mySQLComp = DatabaseDriver.getDatabaseDriver(DatabaseDriver.MYSQL);
     DatabaseDriver oracleComp = DatabaseDriver.getDatabaseDriver(DatabaseDriver.ORACLE);
