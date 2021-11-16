@@ -3,7 +3,6 @@ package company.org;
 import company.org.core.RandomGenerator;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public interface DatabaseHelper {
@@ -12,7 +11,7 @@ public interface DatabaseHelper {
 
     void openYankMySQLConnection();
 
-    void closeConnection(Connection connection) throws SQLException;
+    DatabaseHelper closeConnection(Connection connection) throws SQLException;
 
     String createTables(String[][] tablesToCreate) throws SQLException;
 

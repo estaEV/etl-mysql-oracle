@@ -1,6 +1,7 @@
 package company.org.dbTypes;
 
 import company.org.DatabaseDriver;
+import company.org.DatabaseHelper;
 import company.org.core.ExceptionHandler;
 import company.org.core.RandomGenerator;
 import company.org.pojos.Customer;
@@ -32,8 +33,9 @@ public class OracleDriver extends DatabaseDriver implements OracleQueries {
         return randDataFromOracle;
     }
 
-    public void closeConnection(Connection connection) throws SQLException {
+    public DatabaseHelper closeConnection(Connection connection) throws SQLException {
         connection.close();
+        return null;
     }
 
     public static Connection openConnection() throws SQLException, ClassNotFoundException {

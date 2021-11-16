@@ -2,12 +2,14 @@ package company.org;
 
 import company.org.core.RandomGenerator;
 import company.org.dbTypes.MySQLDriver;
+import company.org.dbTypes.OracleDriver;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 
-public abstract class DatabaseDriver implements DatabaseHelper{
-
+public abstract class DatabaseDriver implements DatabaseHelper {
+    public static final int MYSQL = 0;
+    public static final int ORACLE = 1;
 
     @Override
     public abstract RandomGenerator getRandData();
@@ -49,4 +51,16 @@ public abstract class DatabaseDriver implements DatabaseHelper{
 
     @Override
     public abstract void selectAllOnlineOrders() throws SQLException;
+
+    public static DatabaseDriver getDatabaseDriver(int type) {
+        switch (type) {
+            case MYSQL:
+                return new MySQLDriver();
+            case ORACLE:
+                return new OracleDriver();
+            default:
+                return null;
+        }
+    }
+
 }

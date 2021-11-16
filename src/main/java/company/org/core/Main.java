@@ -1,9 +1,12 @@
 package company.org.core;
 
+import company.org.DatabaseDriver;
+import company.org.DatabaseHelper;
 import company.org.dbTypes.MySQLDriver;
 import company.org.dbTypes.OracleDriver;
 import company.org.pojos.Product;
 
+import javax.xml.crypto.Data;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -38,6 +41,11 @@ import static company.org.dbTypes.OracleQueries.*;
             menu.add("12. Migrate data from ORACLE to MySQL.");
 
             boolean isRunning = true;
+
+            DatabaseDriver factory = DatabaseDriver.getDatabaseDriver(DatabaseDriver.MYSQL);
+            //DatabaseDriver factory = DatabaseDriver.getDatabaseDriver(DatabaseDriver.ORACLE);
+
+
 
             MySQLDriver mySQLComp = new MySQLDriver();
             OracleDriver oracleComp = new OracleDriver();
