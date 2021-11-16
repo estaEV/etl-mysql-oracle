@@ -28,8 +28,12 @@ public class OracleDriver extends DatabaseDriver implements OracleQueries {
     private List<Product> productsListOracle = null;
     private List<OnlineOrder> onlineOrderListOracle = null;
 
-    public RandomGenerator getRandDataFromOracle() {
+    public RandomGenerator getRandData() {
         return randDataFromOracle;
+    }
+
+    public void closeConnection(Connection connection) throws SQLException {
+        connection.close();
     }
 
     public static Connection openConnection() throws SQLException, ClassNotFoundException {

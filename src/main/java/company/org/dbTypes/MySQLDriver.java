@@ -19,15 +19,20 @@ import static company.org.core.Globals.*;
 import static java.lang.String.valueOf;
 
 
-public class MySQLDriver extends DatabaseDriver implements MySQLQueries {
+public class MySQLDriver extends DatabaseDriver implements MySQLQueries{
 
     private RandomGenerator randDataFromMySQL = new RandomGenerator();
     private List<Customer> customersListMySQL = null;
     private List<Product> productsListMySQL = null;
     private List<OnlineOrder> onlineOrderListMySQL = null;
 
-    public RandomGenerator getRandDataFromMySQL() {
+    @Override
+    public RandomGenerator getRandData() {
         return randDataFromMySQL;
+    }
+
+    public void closeConnection(Connection connection) throws SQLException {
+        connection.close();
     }
 
     public static Connection openConnection() {
@@ -41,6 +46,7 @@ public class MySQLDriver extends DatabaseDriver implements MySQLQueries {
         return mySQLConnection;
     }
 
+    @Override
     public void openYankMySQLConnection() {
         try {
             Yank.releaseDefaultConnectionPool();
@@ -51,6 +57,7 @@ public class MySQLDriver extends DatabaseDriver implements MySQLQueries {
         Yank.setupDefaultConnectionPool(dbProps);
     }
 
+    @Override
     public String createTables(String[][] tablesToCreate) throws SQLException {
         String strQuery = null;
         for (int i = 0; i < tablesToCreate.length; i++) {
@@ -80,6 +87,7 @@ public class MySQLDriver extends DatabaseDriver implements MySQLQueries {
         return strQuery;
     }
 
+    @Override
     public void deleteTables(String[] tablesToDelete) throws SQLException {
         for (int i = 0; i < tablesToDelete.length; i++) {
             try (PreparedStatement preparedStatement = mySQLConnection.
@@ -89,6 +97,7 @@ public class MySQLDriver extends DatabaseDriver implements MySQLQueries {
         }
     }
 
+    @Override
     public void truncateTable(String[] tablesToDelete) throws SQLException {
         for (int i = 0; i < tablesToDelete.length; i++) {
             try (PreparedStatement preparedStatement = mySQLConnection.
@@ -98,6 +107,7 @@ public class MySQLDriver extends DatabaseDriver implements MySQLQueries {
         }
     }
 
+    @Override
     public void insertCustomersData(RandomGenerator randData) throws SQLException {
         List<Customer> listCust = new ArrayList<>();
         listCust = randData.getCustomersList();
@@ -120,6 +130,7 @@ public class MySQLDriver extends DatabaseDriver implements MySQLQueries {
         }
     }
 
+    @Override
     public void insertCustomersDataYank(RandomGenerator randData) {
         this.openYankMySQLConnection();
         List<Customer> custList = randData.getCustomersList();
@@ -138,6 +149,7 @@ public class MySQLDriver extends DatabaseDriver implements MySQLQueries {
         Yank.executeBatch(INSERT_INTO_CUSTOMERS_MYSQL, params);
     }
 
+    @Override
     public void insertProductsDataYank(RandomGenerator randData) {
         this.openYankMySQLConnection();
         List<Product> productsList = randData.getProductsList();
@@ -155,6 +167,7 @@ public class MySQLDriver extends DatabaseDriver implements MySQLQueries {
         Yank.executeBatch(INSERT_INTO_PRODUCTS_MYSQL, params);
     }
 
+    @Override
     public void insertOnlineOrdersData(RandomGenerator randData) throws SQLException {
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
@@ -190,6 +203,7 @@ public class MySQLDriver extends DatabaseDriver implements MySQLQueries {
         System.out.println(Duration.between(starts, ends));
     }
 
+    @Override
     public void selectAllCustomers() {
         this.openYankMySQLConnection();
         List<Customer> allCustomers = Yank.queryBeanList(SELECT_ALL_FROM_MYSQL.replace("${tableName}", "customers"), Customer.class, null);
@@ -200,6 +214,7 @@ public class MySQLDriver extends DatabaseDriver implements MySQLQueries {
         randDataFromMySQL.setCustomersList(customersListMySQL);
     }
 
+    @Override
     public void selectAllProducts() {
         this.openYankMySQLConnection();
         List<Product> allProducts = Yank.queryBeanList(SELECT_ALL_FROM_MYSQL.replace("${tableName}", "products"), Product.class, null);
@@ -221,6 +236,7 @@ public class MySQLDriver extends DatabaseDriver implements MySQLQueries {
      * we go to the last row of the resultSet and we set the data from the DB to values of properties of our object
      * we also set the list that we made earlier with all the different products
      */
+    @Override
     public void selectAllOnlineOrders() throws SQLException {
         List<String> uniqueOrderNumbersList = new ArrayList<>();
         List<OnlineOrder> OnlineOrderRetrievedList = new ArrayList<>();
@@ -271,4 +287,6 @@ public class MySQLDriver extends DatabaseDriver implements MySQLQueries {
         onlineOrderListMySQL = OnlineOrderRetrievedList;
         randDataFromMySQL.setOnlineOrderList(onlineOrderListMySQL);
     }
+
+
 }

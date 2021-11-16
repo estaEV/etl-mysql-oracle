@@ -15,7 +15,7 @@ public class Globals {
 
     public static final String[] tablesToWorkWith = {"customers", "products", "online_orders"};
     public static final Map<String, ArrayList<String>> tablesToWorkWith2 = new LinkedHashMap<>();
-
+    public static RandomGenerator randDataDefaultStatic = new RandomGenerator();
 
     public static Connection mySQLConnection = MySQLDriver.openConnection();
     public static Connection oracleConnection;

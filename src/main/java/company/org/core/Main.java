@@ -105,18 +105,18 @@ import static company.org.dbTypes.OracleQueries.*;
                         mySQLComp.selectAllCustomers();
                         mySQLComp.selectAllProducts();
                         mySQLComp.selectAllOnlineOrders();
-                        oracleComp.insertCustomersDataYank(mySQLComp.getRandDataFromMySQL());
-                        oracleComp.insertProductsDataYank(mySQLComp.getRandDataFromMySQL());
-                        oracleComp.insertOnlineOrdersData(mySQLComp.getRandDataFromMySQL());
+                        oracleComp.insertCustomersDataYank(mySQLComp.getRandData());
+                        oracleComp.insertProductsDataYank(mySQLComp.getRandData());
+                        oracleComp.insertOnlineOrdersData(mySQLComp.getRandData());
                         break;
                     case 12:
                         //mySQLComp.truncateTable(tablesToWorkWith);
                         oracleComp.selectAllCustomers();
                         oracleComp.selectAllProducts();
                         oracleComp.selectAllOnlineOrders();
-                        mySQLComp.insertCustomersDataYank(oracleComp.getRandDataFromOracle());
-                        mySQLComp.insertProductsDataYank(oracleComp.getRandDataFromOracle());
-                        mySQLComp.insertOnlineOrdersData(oracleComp.getRandDataFromOracle());
+                        mySQLComp.insertCustomersDataYank(oracleComp.getRandData());
+                        mySQLComp.insertProductsDataYank(oracleComp.getRandData());
+                        mySQLComp.insertOnlineOrdersData(oracleComp.getRandData());
                         break;
                 }
             }
