@@ -131,7 +131,7 @@ public class ETLStepDefinitions {
 
 
         Supplier<Integer> numberOfThings = () -> ThreadLocalRandom.current().nextInt(1, fetchedData.getCustomersList().size() - arg0);
-        for (int i = numberOfThings.get(); i < numberOfThings.get() + arg0; i++) {
+        for (int i = numberOfThings.get(); i <= numberOfThings.get() + arg0; i++) {
             Customer cust1 = fetchedData.getCustomersList().get(i);
             System.out.println("cust1 data:" + cust1.toString());
             Customer cust2 = fetchedData2.getCustomersList().get(i);
@@ -142,7 +142,7 @@ public class ETLStepDefinitions {
         }
 
         numberOfThings = () -> ThreadLocalRandom.current().nextInt(1, fetchedData.getProductsList().size() - arg0);
-        for (int i = numberOfThings.get(); i < numberOfThings.get() + arg0; i++) {
+        for (int i = numberOfThings.get(); i <= numberOfThings.get() + arg0; i++) {
             Product prod1 = fetchedData.getProductsList().get(i);
             System.out.println("prod1 data:" + prod1.toString());
             Product prod2 = fetchedData2.getProductsList().get(i);
@@ -153,7 +153,7 @@ public class ETLStepDefinitions {
         }
 
         numberOfThings = () -> ThreadLocalRandom.current().nextInt(1, fetchedData.getOnlineOrderList().size() - arg0);
-        for (int i = numberOfThings.get(); i < numberOfThings.get() + arg0; i++) {
+        for (int i = numberOfThings.get(); i <= numberOfThings.get() + arg0; i++) {
             OnlineOrder onlineOrder1 = fetchedData.getOnlineOrderList().get(i);
             System.out.println("onlineOrder1 data:" + onlineOrder1.toString());
             OnlineOrder onlineOrder2 = fetchedData2.getOnlineOrderList().get(i);
