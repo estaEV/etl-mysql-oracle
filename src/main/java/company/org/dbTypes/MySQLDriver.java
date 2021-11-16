@@ -1,7 +1,8 @@
 package company.org.dbTypes;
 
 import company.org.DatabaseDriver;
-import company.org.ExceptionHandler;
+import company.org.core.ExceptionHandler;
+import company.org.core.ExceptionHandler;
 import company.org.core.RandomGenerator;
 import company.org.pojos.Customer;
 import company.org.pojos.OnlineOrder;
@@ -31,6 +32,7 @@ public class MySQLDriver extends DatabaseDriver implements MySQLQueries{
         return randDataFromMySQL;
     }
 
+    @Override
     public void closeConnection(Connection connection) throws SQLException {
         connection.close();
     }

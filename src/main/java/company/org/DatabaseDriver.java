@@ -40,11 +40,6 @@ public class DatabaseDriver implements DatabaseHelper{
     }
 
     @Override
-    public void insertCustomersData(RandomGenerator randData) throws SQLException {
-
-    }
-
-    @Override
     public void insertCustomersDataYank(RandomGenerator randData) {
 
     }
@@ -56,6 +51,11 @@ public class DatabaseDriver implements DatabaseHelper{
 
     @Override
     public void insertOnlineOrdersData(RandomGenerator randData) throws SQLException {
+
+    }
+
+    @Override
+    public void insertCustomersData(RandomGenerator randData) throws SQLException {
 
     }
 
