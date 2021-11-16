@@ -11,7 +11,7 @@ public interface DatabaseHelper {
 
     void openYankMySQLConnection();
 
-    DatabaseHelper closeConnection(Connection connection) throws SQLException;
+    void closeConnection(Connection connection) throws SQLException;
 
     String createTables(String[][] tablesToCreate) throws SQLException;
 

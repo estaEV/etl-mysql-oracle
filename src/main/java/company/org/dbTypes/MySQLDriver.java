@@ -33,9 +33,8 @@ public class MySQLDriver extends DatabaseDriver implements MySQLQueries{
     }
 
     @Override
-    public DatabaseHelper closeConnection(Connection connection) throws SQLException {
+    public void closeConnection(Connection connection) throws SQLException {
         connection.close();
-        return null;
     }
 
     public static Connection openConnection() {

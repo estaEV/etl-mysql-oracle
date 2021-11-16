@@ -33,9 +33,8 @@ public class OracleDriver extends DatabaseDriver implements OracleQueries {
         return randDataFromOracle;
     }
 
-    public DatabaseHelper closeConnection(Connection connection) throws SQLException {
+    public void closeConnection(Connection connection) throws SQLException {
         connection.close();
-        return null;
     }
 
     public static Connection openConnection() throws SQLException, ClassNotFoundException {
@@ -95,7 +94,6 @@ public class OracleDriver extends DatabaseDriver implements OracleQueries {
             System.out.println("query: " + query);
             try (PreparedStatement preparedStatement = oracleConnection.
                     prepareStatement(query)) {
-                System.out.println("prepstat: " + preparedStatement);
                 preparedStatement.executeUpdate();
             }
         }

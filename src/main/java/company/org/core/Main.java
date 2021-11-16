@@ -4,6 +4,8 @@ import company.org.DatabaseDriver;
 import company.org.DatabaseHelper;
 import company.org.dbTypes.MySQLDriver;
 import company.org.dbTypes.OracleDriver;
+import company.org.pojos.Customer;
+import company.org.pojos.OnlineOrder;
 import company.org.pojos.Product;
 
 import javax.xml.crypto.Data;
@@ -39,19 +41,19 @@ import static company.org.dbTypes.OracleQueries.*;
             menu.add("10. SELECT all entities FROM ORACLE and save them to global vars.");
             menu.add("11. Migrate data from MySQL to ORACLE.");
             menu.add("12. Migrate data from ORACLE to MySQL.");
+            menu.add("13. Fetch data from MySQL, manipulate it and inject it to ORACLE.");
+            menu.add("14. Fetch data from ORACLE, manipulate it and inject it to MySQL.");
 
             boolean isRunning = true;
 
-            DatabaseDriver factory = DatabaseDriver.getDatabaseDriver(DatabaseDriver.MYSQL);
-            //DatabaseDriver factory = DatabaseDriver.getDatabaseDriver(DatabaseDriver.ORACLE);
-
-
-
-            MySQLDriver mySQLComp = new MySQLDriver();
-            OracleDriver oracleComp = new OracleDriver();
+            DatabaseDriver mySQLComp = DatabaseDriver.getDatabaseDriver(DatabaseDriver.MYSQL);
+            DatabaseDriver oracleComp = DatabaseDriver.getDatabaseDriver(DatabaseDriver.ORACLE);
 
             RandomGenerator randDataDefault = new RandomGenerator();
             randDataDefault.generateMeSome();
+
+            Manipulator manipulatorObj = new Manipulator();
+            RandomGenerator manipulatedData = null;
 
             while (isRunning) {
                 menu.forEach(option -> System.out.println(option));
@@ -118,7 +120,7 @@ import static company.org.dbTypes.OracleQueries.*;
                         oracleComp.insertOnlineOrdersData(mySQLComp.getRandData());
                         break;
                     case 12:
-                        //mySQLComp.truncateTable(tablesToWorkWith);
+                        //oracleComp.truncateTable(tablesToWorkWith);
                         oracleComp.selectAllCustomers();
                         oracleComp.selectAllProducts();
                         oracleComp.selectAllOnlineOrders();
@@ -126,19 +128,27 @@ import static company.org.dbTypes.OracleQueries.*;
                         mySQLComp.insertProductsDataYank(oracleComp.getRandData());
                         mySQLComp.insertOnlineOrdersData(oracleComp.getRandData());
                         break;
+                    case 13:
+                        mySQLComp.selectAllCustomers();
+                        mySQLComp.selectAllProducts();
+                        mySQLComp.selectAllOnlineOrders();
+                        manipulatedData = manipulatorObj.manipulateExtractedData(mySQLComp.getRandData());
+                        oracleComp.insertCustomersDataYank(manipulatedData);
+                        oracleComp.insertProductsDataYank(manipulatedData);
+                        oracleComp.insertOnlineOrdersData(manipulatedData);
+                        break;
+                    case 14:
+                        oracleComp.selectAllCustomers();
+                        oracleComp.selectAllProducts();
+                        oracleComp.selectAllOnlineOrders();
+                        manipulatedData = manipulatorObj.manipulateExtractedData(oracleComp.getRandData());
+                        mySQLComp.insertCustomersDataYank(manipulatedData);
+                        mySQLComp.insertProductsDataYank(manipulatedData);
+                        mySQLComp.insertOnlineOrdersData(manipulatedData);
+                        break;
                 }
             }
         }
-
-//        public Product getProductListOfTheExistingRandObject() {
-//            randDataDefaultStatic.getProductsList();
-//        }
-//
-/*        public RandomGenerator getMeRandData() throws ParseException {
-            RandomGenerator randDataCustom = new RandomGenerator();
-            randDataCustom.generateMeSome();
-            return randDataCustom;
-        }*/
 
     }
 
