@@ -1,5 +1,5 @@
 
-package company.org.core;
+package company.org;
 
 import com.github.javafaker.Faker;
 import company.org.pojos.Customer;
@@ -17,8 +17,6 @@ import java.util.Locale;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
-
-import static company.org.core.Globals.*;
 
 public class RandomGenerator {
     private List<Customer> customersList = null;
@@ -58,7 +56,7 @@ public class RandomGenerator {
 
         Supplier<Integer> numOfSubjects = () -> ThreadLocalRandom.current().nextInt(6, 9);
         Supplier<Integer> dice = () -> ThreadLocalRandom.current().nextInt(1, 60);
-        Supplier<Integer> numberOfThings = () -> ThreadLocalRandom.current().nextInt(10, 20);
+        Supplier<Integer> numberOfThings = () -> ThreadLocalRandom.current().nextInt(10, 30);
         Supplier<Integer> year = () -> ThreadLocalRandom.current().nextInt(2018, 2022);
         Supplier<Integer> grade = () -> ThreadLocalRandom.current().nextInt(2, 6);
 

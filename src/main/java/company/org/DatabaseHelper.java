@@ -1,7 +1,5 @@
 package company.org;
 
-import company.org.core.RandomGenerator;
-
 import java.sql.Connection;
 import java.sql.SQLException;
 

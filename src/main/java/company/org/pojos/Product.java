@@ -81,4 +81,22 @@ public class Product {
                 ", price=" + price +
                 '}';
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Product prod = (Product) o;
+        return
+                product_name.equals(prod.product_name) &&
+                        product_description.equals(prod.product_description) &&
+                        product_code.equals(prod.product_code) &&
+                        quantity == prod.quantity &&
+                        price == prod.price;
+    }
+
 }

@@ -88,4 +88,20 @@ public class OnlineOrder {
                 ", quantity=" + quantity +
                 '}';
     }
+
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        OnlineOrder onlineOrder = (OnlineOrder) o;
+        return order_number == onlineOrder.order_number &&
+                customer_number == onlineOrder.customer_number &&
+                total_price == onlineOrder.total_price &&
+                quantity == onlineOrder.quantity;
+
+    }
+
 }

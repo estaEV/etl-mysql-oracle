@@ -1,4 +1,4 @@
-package company.org.core;
+package company.org;
 
 import java.sql.SQLException;
 

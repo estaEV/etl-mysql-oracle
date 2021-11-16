@@ -1,4 +1,4 @@
-package company.org.core;
+package company.org;
 
 import company.org.dbTypes.MySQLDriver;
 import company.org.dbTypes.OracleDriver;
@@ -8,8 +8,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class Globals {
 

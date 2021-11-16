@@ -1,22 +1,13 @@
-package company.org.core;
+package company.org;
 
-import company.org.DatabaseDriver;
-import company.org.DatabaseHelper;
-import company.org.dbTypes.MySQLDriver;
-import company.org.dbTypes.OracleDriver;
-import company.org.pojos.Customer;
-import company.org.pojos.OnlineOrder;
-import company.org.pojos.Product;
-
-import javax.xml.crypto.Data;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-import static company.org.core.Globals.tablesToWorkWith;
-import static company.org.core.Globals.*;
+import static company.org.Globals.tablesToWorkWith;
+import static company.org.Globals.*;
 import static company.org.dbTypes.MySQLQueries.tablesToWorkWithMySQL;
 import static company.org.dbTypes.OracleQueries.*;
 

@@ -89,7 +89,6 @@ public class Customer {
     public String toString() {
         return "Customer{" +
                 "customer_number=" + customer_number +
-                ", year=" + year +
                 ", first_name='" + first_name + '\'' +
                 ", last_name='" + last_name + '\'' +
                 ", address_line1='" + address_line1 + '\'' +
@@ -97,4 +96,23 @@ public class Customer {
                 ", postcode='" + postcode + '\'' +
                 '}';
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Customer customer = (Customer) o;
+        return customer_number == customer.customer_number &&
+                first_name.equals(customer.first_name) &&
+                last_name.equals(customer.last_name) &&
+                address_line1.equals(customer.address_line1) &&
+                city.equals(customer.city) &&
+                postcode.equals(customer.postcode);
+    }
+
 }
+

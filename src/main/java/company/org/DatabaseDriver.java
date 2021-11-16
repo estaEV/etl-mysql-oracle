@@ -1,6 +1,5 @@
 package company.org;
 
-import company.org.core.RandomGenerator;
 import company.org.dbTypes.MySQLDriver;
 import company.org.dbTypes.OracleDriver;
 

@@ -1,9 +1,8 @@
 package company.org.dbTypes;
 
 import company.org.DatabaseDriver;
-import company.org.DatabaseHelper;
-import company.org.core.ExceptionHandler;
-import company.org.core.RandomGenerator;
+import company.org.ExceptionHandler;
+import company.org.RandomGenerator;
 import company.org.pojos.Customer;
 import company.org.pojos.OnlineOrder;
 import company.org.pojos.Product;
@@ -19,7 +18,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
-import static company.org.core.Globals.*;
+import static company.org.Globals.*;
 import static java.lang.String.valueOf;
 
 public class OracleDriver extends DatabaseDriver implements OracleQueries {
@@ -209,7 +208,7 @@ public class OracleDriver extends DatabaseDriver implements OracleQueries {
         this.openYankMySQLConnection();
         List<Customer> allCustomers = Yank.queryBeanList(SELECT_ALL_FROM_ORACLE.replace("${tableName}", "customers"), Customer.class, null);
         for (Customer customer : allCustomers) {
-            System.out.println(customer.getCustomer_number());
+//            System.out.println(customer.getCustomer_number());
         }
         customersListOracle = allCustomers;
         randDataFromOracle.setCustomersList(customersListOracle);
@@ -219,7 +218,7 @@ public class OracleDriver extends DatabaseDriver implements OracleQueries {
         this.openYankMySQLConnection();
         List<Product> allProducts = Yank.queryBeanList(SELECT_ALL_FROM_ORACLE.replace("${tableName}", "products"), Product.class, null);
         for (Product product : allProducts) {
-            System.out.println(product.getProduct_code());
+//            System.out.println(product.getProduct_code());
         }
         productsListOracle = allProducts;
         randDataFromOracle.setProductsList(productsListOracle);

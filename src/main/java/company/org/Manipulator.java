@@ -1,4 +1,4 @@
-package company.org.core;
+package company.org;
 
 import company.org.pojos.Customer;
 import company.org.pojos.OnlineOrder;
