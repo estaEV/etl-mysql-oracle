@@ -22,7 +22,6 @@ public interface OracleQueries {
                     "total_price DOUBLE PRECISION", "migrated_ts TIMESTAMP", "last_updated_ts TIMESTAMP"}
     };
 
-
     String CREATE_TABLE_ORACLE = "CREATE TABLE ${tableName}";
     String TRUNCATE_TABLE_ORACLE = "TRUNCATE TABLE ${tableName} DROP ALL STORAGE\n";
     String DROP_TABLE_ORACLE = "DROP TABLE ${tableName} PURGE\n";
@@ -39,14 +38,5 @@ public interface OracleQueries {
 
     String SELECT_DISTINCT_ORDERS_ORACLE = "select distinct(order_number) from online_orders";
     String SELECT_ALL_DATA_RELATED_TO_A_SPECIFIC_ORDER = "select * from online_orders where order_number = %1$s";
-
-
-//    String DELETE_TABLE_CUSTOMERS_MYSQL = "DROP TABLE IF EXISTS CUSTOMERS;\n";
-//    String DELETE_TABLE_PRODUCTS_MYSQL = "DROP TABLE IF EXISTS PRODUCTS;\n";
-//    String DELETE_TABLE_ONLINE_ORDERS_MYSQL = "DROP TABLE IF EXISTS ONLINE_ORDERS;\n";
-//
-//    String TRUNCATE_TABLE_CUSTOMERS_MYSQL = "TRUNCATE TABLE C##ORACLESLAVEUSER.CUSTOMERS;\n";
-//    String TRUNCATE_TABLE_PRODUCTS_MYSQL = "TRUNCATE TABLE \"C##ORACLESLAVEUSER\".PRODUCTS;\n";
-//    String TRUNCATE_TABLE_ONLINE_ORDERS_MYSQL = "TRUNCATE TABLE \"C##ORACLESLAVEUSER\".ONLINE_ORDERS;\n";
 
 }

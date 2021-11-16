@@ -35,6 +35,4 @@ public interface MySQLQueries {
     String SELECT_DISTINCT_ORDERS_MYSQL = "select distinct(order_number) from online_orders;";
     String SELECT_ALL_DATA_RELATED_TO_A_SPECIFIC_MYSQL = "select * from online_orders where order_number = %1$s;";
 
-
-
 }
