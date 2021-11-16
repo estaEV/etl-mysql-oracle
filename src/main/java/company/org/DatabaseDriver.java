@@ -6,53 +6,35 @@ import company.org.dbTypes.MySQLDriver;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-public class DatabaseDriver implements DatabaseHelper{
+public abstract class DatabaseDriver implements DatabaseHelper{
 
 
     @Override
-    public RandomGenerator getRandData() {
-        return null;
-    }
+    public abstract RandomGenerator getRandData();
 
     @Override
-    public void openYankMySQLConnection() {
-
-    }
+    public abstract void openYankMySQLConnection();
 
     @Override
-    public void closeConnection(Connection connection) throws SQLException {
-
-    }
+    public abstract void closeConnection(Connection connection) throws SQLException;
 
     @Override
-    public String createTables(String[][] tablesToCreate) throws SQLException {
-        return null;
-    }
+    public abstract String createTables(String[][] tablesToCreate) throws SQLException;
 
     @Override
-    public void deleteTables(String[] tablesToDelete) throws SQLException {
-
-    }
+    public abstract void deleteTables(String[] tablesToDelete) throws SQLException;
 
     @Override
-    public void truncateTable(String[] tablesToDelete) throws SQLException {
-
-    }
+    public abstract void truncateTable(String[] tablesToDelete) throws SQLException;
 
     @Override
-    public void insertCustomersDataYank(RandomGenerator randData) {
-
-    }
+    public abstract void insertCustomersDataYank(RandomGenerator randData);
 
     @Override
-    public void insertProductsDataYank(RandomGenerator randData) {
-
-    }
+    public abstract void insertProductsDataYank(RandomGenerator randData);
 
     @Override
-    public void insertOnlineOrdersData(RandomGenerator randData) throws SQLException {
-
-    }
+    public abstract void insertOnlineOrdersData(RandomGenerator randData) throws SQLException;
 
     @Override
     public void insertCustomersData(RandomGenerator randData) throws SQLException {
@@ -60,17 +42,11 @@ public class DatabaseDriver implements DatabaseHelper{
     }
 
     @Override
-    public void selectAllCustomers() {
-
-    }
+    public abstract void selectAllCustomers();
 
     @Override
-    public void selectAllProducts() {
-
-    }
+    public abstract void selectAllProducts();
 
     @Override
-    public void selectAllOnlineOrders() throws SQLException {
-
-    }
+    public abstract void selectAllOnlineOrders() throws SQLException;
 }

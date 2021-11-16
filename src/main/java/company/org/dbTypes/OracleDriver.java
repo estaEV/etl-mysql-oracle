@@ -1,7 +1,7 @@
 package company.org.dbTypes;
 
 import company.org.DatabaseDriver;
-import company.org.ExceptionHandler;
+import company.org.core.ExceptionHandler;
 import company.org.core.RandomGenerator;
 import company.org.pojos.Customer;
 import company.org.pojos.OnlineOrder;

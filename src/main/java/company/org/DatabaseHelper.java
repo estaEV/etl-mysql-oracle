@@ -25,6 +25,7 @@ public interface DatabaseHelper {
     void insertProductsDataYank(RandomGenerator randData);
 
     void insertOnlineOrdersData(RandomGenerator randData) throws SQLException;
+
     void insertCustomersData(RandomGenerator randData) throws SQLException;
 
     void selectAllCustomers();
